@@ -22,11 +22,8 @@ jobs:
     - name: Setup ImGui Headers
       run: |
         mkdir -p include/imgui
-        # 1. Configure Git to not prompt for credentials
         git config --global credential.helper store
-        # 2. Clone ImGui
         git clone --depth 1 https://github.com/ocornut/imgui.git imgui_repo
-        # 3. Copy files
         cp imgui_repo/imgui.h include/imgui/
         cp imgui_repo/imgui.cpp include/imgui/
         cp imgui_repo/imgui_draw.cpp include/imgui/
@@ -39,7 +36,6 @@ jobs:
         cp imgui_repo/backends/imgui_impl_metal.mm include/imgui/
         cp imgui_repo/backends/imgui_impl_uikit.h include/imgui/
         cp imgui_repo/backends/imgui_impl_uikit.mm include/imgui/
-        # 4. Cleanup
         rm -rf imgui_repo
 
     - name: Setup Luau Headers
@@ -115,6 +111,3 @@ jobs:
       with:
         name: RobloxExecutor-dylib
         path: RobloxExecutor.dylib
-
-
-NoTrack AI — https://notrack.ai/
