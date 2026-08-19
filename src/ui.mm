@@ -1,10 +1,14 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <Metal/Metal.h>
-#import <imgui.h>
-#import <imgui_impl_metal.h>
-#import <imgui_impl_uikit.h> // Example for iOS
-#import "ui.h"
+#import <MetalKit/MetalKit.h>
+
+// Include ImGui core and backends
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_metal.h"
+#include "imgui/imgui_impl_uikit.h" // If using UIKit specific backend
+
+#include "ui.h"
 
 // Global UI Instance
 static UI* g_uiInstance = nullptr;
@@ -20,9 +24,14 @@ void initUI() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     
-    // Initialize Metal backend for iOS
-    ImGui_ImplMetal_Init(nil); // Pass your MTLDevice
-    ImGui_ImplUIKit_Init(nil); // Pass your UIWindow
+    // Initialize Metal backend
+    // Note: You need a valid MTLDevice here. 
+    // In a real Roblox injection, this device is passed from the host app.
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    ImGui_ImplMetal_Init(device);
+    
+    // Initialize UIKit backend
+    ImGui_ImplUIKit_Init(nil); // Pass UIWindow if available
     
     // Style
     ImGui::StyleColorsDark();
@@ -45,8 +54,11 @@ void renderUI() {
     ImGui::End();
     
     ImGui::Render();
-    // Render to Metal layer (this part depends on your specific Metal setup)
-    ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), nil);
+    
+    // Render to Metal layer
+    // In a real scenario, this is called from the render loop of the host app
+    // For now, we assume the host app calls the render function.
+    // ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), nil);
 }
 
 // --- UI Logic Implementation ---
@@ -71,8 +83,6 @@ void UI::renderScriptEditor() {
 
 void UI::renderButtonBar() {
     if (ImGui::Button("📋 Paste Script")) {
-        // Handle paste logic (e.g., read from clipboard)
-        // For now, just log
         logMessage = "[Paste] Clipboard read.";
     }
     
@@ -84,7 +94,6 @@ void UI::renderButtonBar() {
     
     ImGui::SameLine();
     if (ImGui::Button("💾 Save")) {
-        // Save to file
         Script s;
         s.name = scriptName;
         s.content = scriptCode;
@@ -104,3 +113,6 @@ void UI::renderLog() {
     ImGui::Text("Log:");
     ImGui::TextWrapped("%s", logMessage.c_str());
 }
+
+
+NoTrack AI — https://notrack.ai/
