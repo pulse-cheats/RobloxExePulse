@@ -1,0 +1,42 @@
+name: Build Roblox Executor dylib
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Dependencies
+      run: |
+        brew install llvm
+        # Αν χρειαστείς επιπλέον βιβλιοθήκες, τις εγκαθιστάς εδώ
+
+    - name: Build dylib
+      run: |
+        # Υποθέτουμε ότι τα include αρχεία είναι στον φάκελο include/
+        # Χρησιμοποιούμε clang++ για C++ code
+        
+        # 1. Compile UI and Bridge
+        clang++ -std=c++17 -fPIC -shared \
+          -I./include \
+          -I./src \
+          -framework Foundation \
+          -framework UIKit \
+          -framework Metal \
+          -framework MetalKit \
+          -framework AppKit \
+          src/ui.mm \
+          src/luau_bridge.cpp \
+          src/main.cpp \
+          -o RobloxExecutor.dylib
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: RobloxExecutor-dylib
+        path: RobloxExecutor.dylib
