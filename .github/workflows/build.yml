@@ -22,24 +22,30 @@ jobs:
     - name: Setup ImGui Headers
       run: |
         mkdir -p include/imgui
-        git clone --depth 1 https://github.com/ImGuIu/imgui.git imgui_repo
-        cp imgui_repo/imgui.h imgui/imgui.h
-        cp imgui_repo/imgui.cpp imgui/imgui.cpp
-        cp imgui_repo/imgui_draw.cpp imgui/imgui_draw.cpp
-        cp imgui_repo/imgui_widgets.cpp imgui/imgui_widgets.cpp
-        cp imgui_repo/imgui_tables.cpp imgui/imgui_tables.cpp
-        cp imgui_repo/imconfig.h imgui/imconfig.h
-        cp imgui_repo/imgui_internal.h imgui/imgui_internal.h
-        cp imgui_repo/imstb_*.h imgui/
-        cp imgui_repo/backends/imgui_impl_metal.h imgui/
-        cp imgui_repo/backends/imgui_impl_metal.mm imgui/
-        cp imgui_repo/backends/imgui_impl_uikit.h imgui/
-        cp imgui_repo/backends/imgui_impl_uikit.mm imgui/
+        # 1. Configure Git to not prompt for credentials
+        git config --global credential.helper store
+        # 2. Clone ImGui
+        git clone --depth 1 https://github.com/ocornut/imgui.git imgui_repo
+        # 3. Copy files
+        cp imgui_repo/imgui.h include/imgui/
+        cp imgui_repo/imgui.cpp include/imgui/
+        cp imgui_repo/imgui_draw.cpp include/imgui/
+        cp imgui_repo/imgui_widgets.cpp include/imgui/
+        cp imgui_repo/imgui_tables.cpp include/imgui/
+        cp imgui_repo/imconfig.h include/imgui/
+        cp imgui_repo/imgui_internal.h include/imgui/
+        cp imgui_repo/imstb_*.h include/imgui/
+        cp imgui_repo/backends/imgui_impl_metal.h include/imgui/
+        cp imgui_repo/backends/imgui_impl_metal.mm include/imgui/
+        cp imgui_repo/backends/imgui_impl_uikit.h include/imgui/
+        cp imgui_repo/backends/imgui_impl_uikit.mm include/imgui/
+        # 4. Cleanup
         rm -rf imgui_repo
 
     - name: Setup Luau Headers
       run: |
         mkdir -p include/luau
+        git config --global credential.helper store
         git clone --depth 1 https://github.com/Roblox/luau.git luau_repo
         cp -r luau_repo/Lua/*.h include/luau/
         cp -r luau_repo/Luau/*.h include/luau/
@@ -109,3 +115,6 @@ jobs:
       with:
         name: RobloxExecutor-dylib
         path: RobloxExecutor.dylib
+
+
+NoTrack AI — https://notrack.ai/
