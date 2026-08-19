@@ -1,7 +1,3 @@
-Ωκ, ορίστε ο πλήρης κώδικας για το iOS dylib executor για Luau. Έφτιαξα τα πάντα σε ένα αρχείο build.yml που περιέχει όλα τα C++ και Swift αρχεία inline.
-
-build.yml
-Copy
 name: Build Luau Executor
 
 on:
