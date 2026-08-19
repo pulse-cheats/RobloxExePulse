@@ -1,34 +1,41 @@
-#include <lua.hpp> // Assuming Luau headers are named lua.hpp or similar
 #include <iostream>
 #include "ui.h"
 
+// Include Luau headers correctly
+#include "luau/Lua.h"
+#include "luau/LuaLib.h"
+#include "luau/LuaAux.h"
+
 // Bridge between C++ and Luau
 extern "C" {
-    #include <lua.h>
-    #include <lualib.h>
-    #include <lauxlib.h>
+    // Luau uses standard Lua API compatibility
 }
 
 // You need to link against the Luau library
 // This is a simplified example
 
 int executeScript(const std::string& code) {
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
+    // Create a new Lua state
+    lua_State* L = lua_create();
+    
+    // Open standard libraries
+    lua_openlibs(L);
     
     // Register Roblox API here (e.g., game, workspace, etc.)
     // pushRobloxAPI(L);
     
-    int result = luaL_dostring(L, code.c_str());
+    // Execute the script
+    int result = lua_dostring(L, code.c_str());
     
     if (result != LUA_OK) {
         std::string err = lua_tostring(L, -1);
         lua_pop(L, 1);
         std::cerr << "[Luau Error]: " << err << std::endl;
+        lua_destroy(L);
         return 1;
     }
     
-    lua_close(L);
+    lua_destroy(L);
     return 0;
 }
 
